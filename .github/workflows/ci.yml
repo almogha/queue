@@ -9,9 +9,7 @@ jobs:
   build-scan-push:
     runs-on: ubuntu-latest
     permissions:
-      # required for all workflows
       security-events: write
-      # only required for workflows in private repositories
       actions: read
       contents: read
 
@@ -31,7 +29,6 @@ jobs:
       - run: |
           pip install bandit[sarif]
           bandit -r QueueShield --format sarif --output bandit-results.sarif
-          cat bandit-results.sarif
 
       - name: Upload bandit scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
