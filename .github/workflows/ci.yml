@@ -46,9 +46,6 @@ jobs:
 
       - name: Scan Docker image for vulnerabilities
         uses: aquasecurity/trivy-action@0.28.0
-        env:
-          TRIVY_SKIP_DB_UPDATE: true
-          TRIVY_SKIP_JAVA_DB_UPDATE: true
         with:
           scan-type: 'image'
           image-ref: ${{ secrets.DOCKER_USERNAME }}/queueshield:latest
