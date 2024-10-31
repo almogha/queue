@@ -47,7 +47,7 @@ jobs:
       - name: Scan Docker image for vulnerabilities
         uses: aquasecurity/trivy-action@0.28.0
         with:
-          image-ref: ${{ steps.build-image.outputs.imageID }}
+          image-ref: ${{ secrets.DOCKER_USERNAME }}/queueshield:latest
           format: 'sarif'
           output: 'trivy-results.sarif'
 
