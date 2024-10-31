@@ -51,6 +51,9 @@ jobs:
           format: 'sarif'
           output: 'trivy-results.sarif'
 
+      - name: show sarif file
+        run: ls && cat trivy-results.sarif
+
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
         with:
