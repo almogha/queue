@@ -12,7 +12,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the application code
-COPY QueueShield/ ./QueueShield/
+COPY QueueShield/ .
 
 # Set permissions and change ownership to non-root user
 RUN chown -R appuser:appgroup /app
@@ -21,4 +21,4 @@ RUN chown -R appuser:appgroup /app
 USER appuser
 
 # Define command to run the application
-ENTRYPOINT ["python", "-m", "QueueShield.main"]
+ENTRYPOINT ["python", "main.py"]

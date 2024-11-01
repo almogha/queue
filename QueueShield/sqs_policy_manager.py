@@ -1,7 +1,6 @@
 import boto3
 import json
 import logging
-from botocore.exceptions import ClientError
 from QueueShield.config import AWS_ACCOUNT_ID, MODE
 
 
@@ -18,7 +17,7 @@ def get_queue_policy(sqs_client, queue_url):
         return {}
 
 
-def find_external_access(statements):
+def update_external_access(statements):
     """Identifies external access in policy statements."""
     found_external_access = False
     for statement in statements:
@@ -31,15 +30,16 @@ def find_external_access(statements):
     return found_external_access
 
 
-def update_policy(sqs_client, queue_url, policy):
+def commit_policy(sqs_client, queue_url, policy):
     """Updates the SQS policy if external access was found and MODE is 'update'."""
     try:
         sqs_client.set_queue_attributes(
             QueueUrl=queue_url, Attributes={"Policy": json.dumps(policy)}
         )
-        logging.info(f"Policy updated for queue: {queue_url}")
-    except ClientError as e:
-        logging.error(f"Error updating policy for {queue_url}: {e}")
+        logging.info(f"Policy commited for queue: {queue_url}")
+    except Exception as e:
+        logging.error(f"Error commiting policy for {queue_url}: {e}")
+        raise e
 
 
 def check_and_update_sqs_policy(sqs_client, queue_url):
@@ -50,12 +50,12 @@ def check_and_update_sqs_policy(sqs_client, queue_url):
         return
 
     statements = policy["Statement"]
-    found_external_access = find_external_access(statements)
+    updated = update_external_access(statements)
 
-    if found_external_access:
+    if updated:
         logging.info(f"External access found for queue: {queue_url}")
         if MODE == "update":
-            update_policy(sqs_client, queue_url, policy)
+            commit_policy(sqs_client, queue_url, policy)
     else:
         logging.info(f"No external access found for queue: {queue_url}")
 
