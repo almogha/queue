@@ -2,6 +2,10 @@ name: Run Docker Container Daily
 
 # Schedule the workflow to run at 00:00 UTC every day
 on:
+############## remove!!!
+  push:
+    branches:
+      - main    # Trigger on push to main branch
   schedule:
     - cron: '0 0 * * *'
 
@@ -20,7 +24,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Pull Docker Image
-        run: docker pull ${{ secrets.DOCKER_USERNAME }}/QueueShield:latest
+        run: docker pull ${{ secrets.DOCKER_USERNAME }}/queueshield:latest
 
       - name: Run Docker Container
         run: |
@@ -28,6 +32,7 @@ jobs:
               -e AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
               -e AWS_DEFAULT_REGION=${{ secrets.AWS_DEFAULT_REGION }} \
               -e S3_BUCKET_NAME=${{ secrets.S3_BUCKET_NAME }} \
+              -e MODE=log \
               ${{ secrets.DOCKER_USERNAME }}/queueshield:latest
 
       - name: Log out from Docker Hub

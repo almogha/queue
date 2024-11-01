@@ -16,7 +16,6 @@ COPY QueueShield/ ./QueueShield/
 
 # Set permissions and change ownership to non-root user
 RUN chown -R appuser:appgroup /app
-RUN chmod -R 755 /app
 
 # Switch to the non-root user
 USER appuser
