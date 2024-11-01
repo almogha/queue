@@ -18,11 +18,8 @@ def find_external_access(statements):
     found_external_access = False
     for statement in statements:
         principal = statement.get("Principal", {})
-        print(principal)
-        # action = statement.get("Action", [])
         
         if "*" in principal or principal.get("AWS") != AWS_ACCOUNT_ID:
-            # if any(act in action for act in ["sqs:SendMessage", "sqs:ReceiveMessage", "sqs:DeleteMessage", "sqs:*"]):
             logging.info(f"External access found in statement: {statement}")
             statement["Principal"] = {"AWS": AWS_ACCOUNT_ID}
             found_external_access = True
